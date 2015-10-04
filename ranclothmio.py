@@ -36,33 +36,36 @@ archivos=glob.glob('./*.png')
 print '\n -Lista de achivos png en el directorio: \n', archivos, '\n'
 
 ################################## funcion para meter la imagen
-def imagen(im,debug=False):
+def imagen(debug=False):
     imagenpng=raw_input('Nombre de la imagen a utilizar: "nombre.png", o "random":  \n')
     if imagenpng=='':
-        if debug==True: im.show       
         print 'Utilizo la imagen anterior. Puede haber problemas con el tamaño...' 
-        return im
+        return 
     if imagenpng=='random':
-        imagenpng=archivos[np.rancom.randint(len(archivos))]
-        im=Imagen.open(imagenpng)
-        if debug==True: print 'Archivo random a utilizar: ', imagenpng 
+        imagenpng=archivos[np.random.randint(len(archivos))]
+        im=Image.open(imagenpng)
+        if debug==True: print '+++Archivo random a utilizar: ', imagenpng 
     else:
         im=Image.open(imagenpng)
     return im
-    
-im=imagen(im,debug=True); im.show() #la imagen que voy a utilizar
+
+k=imagen()#esta parte del codigo seguro se puede arreglar.
+if k is not None:
+    im=k  
+im.show() #la imagen que voy a utilizar
 im=im.convert("RGBA")
 oldsize=im.size
 print 'Datos de la imagen Original:' , 'tamano=', oldsize, 'mode=', im.mode #datos de la imagen original
-size=np.array(oldsize) #tamanio para resize. hacer tamaño random?
+
 
 ################################# rotacion
+size=np.array(oldsize) #tamanio para resize. hacer tamaño random?
 im=im.rotate(float(np.random.random(1)*360),expand=1).resize(size)#angulo random
 #im.show()#muestra la imagen rotada
 im.save('imt1.jpg')#graba la imagen rotada como jpg
 
 ########################nueva imagen
-mesh = Image.new("RGBA", np.array(oldsize)*4,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
+mesh = Image.new("RGBA", np.array(oldsize)*3,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
 newsize=mesh.size
 a=18#cantidad de ptos totales
 r=np.random.random((a,2)) #matriz de numeros random(es un vextor de pares de coordenadas)
@@ -150,13 +153,13 @@ def atom_locations(basis, n, debug=False):
      
      if debug == True : #para debuggear
          #chaquea que la base este bien asignada
-         print 'a1,a2: ', basis
+         print '+++ a1,a2: ', basis
 
      for n1 in range(n):
          for n2 in range(n):
-             if debug == True : print 'n1,n2=', n1, n2 #debuggear
+             if debug == True : print '+++ n1,n2=', n1, n2 #debuggear
              R.append( [n2*a2[0]+n1*a1[0], n2*a2[1]+n1*a1[1]] )
-         if debug == True : print 'R=', R #debuggear
+         if debug == True : print '+++ R=', R #debuggear
 
      return R #podria redefinir la funcion para n atomos.(imagenes.)  R=n1*at1+n2*at2  la red de bravais
 '''
@@ -168,10 +171,10 @@ def new_atom(red, posicion, debug=False ):
 R= atom_locations(unit_vectors(5.,'random'),6)#chequeo que funcione la red. 
 #print 'l:', l,  'm:', m #chaqueo que funcione ly m
 
-mesh2 = Image.new("RGBA", np.array(im.size)*10,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
+mesh2 = Image.new("RGBA", np.array(im.size)*7,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
 #print 'l=', l
-R=np.array(R)#combierto a l en un array para poder operar como vector.
-R=R*im.size[0]/2
+R=np.array(R)#combierto a R en un array para poder operar como vector.
+R=R*max(im.size)/2
 for b in R:
     #print 'b:',  b
     fig2=plt.plot(b[0],mesh2.size[1]-b[1],'.b')
