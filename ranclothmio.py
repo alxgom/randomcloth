@@ -32,27 +32,40 @@ Otras Redes posibles.(hexagonos, etc...).
 """
 
 plt.clf()
-print '\n -Lista de achivos png en el directorio: \n', glob.glob('./*.png'), '\n'
+archivos=glob.glob('./*.png')
+print '\n -Lista de achivos png en el directorio: \n', archivos, '\n'
 
-a=18#cantidad de ptos totales
-r=np.random.random((a,2)) #matriz de numeros random(es un vextor de pares de coordenadas)
-#print r
-
-im=Image.open('perrofeo.png')#carga la imagen
+################################## funcion para meter la imagen
+def imagen(im,debug=False):
+    imagenpng=raw_input('Nombre de la imagen a utilizar: "nombre.png", o "random":  \n')
+    if imagenpng=='':
+        if debug==True: im.show       
+        print 'Utilizo la imagen anterior. Puede haber problemas con el tamaño...' 
+        return im
+    if imagenpng=='random':
+        imagenpng=archivos[np.rancom.randint(len(archivos))]
+        im=Imagen.open(imagenpng)
+        if debug==True: print 'Archivo random a utilizar: ', imagenpng 
+    else:
+        im=Image.open(imagenpng)
+    return im
+    
+im=imagen(im,debug=True); im.show() #la imagen que voy a utilizar
+im=im.convert("RGBA")
 oldsize=im.size
 print 'Datos de la imagen Original:' , 'tamano=', oldsize, 'mode=', im.mode #datos de la imagen original
+size=np.array(oldsize) #tamanio para resize. hacer tamaño random?
 
-size=np.array(oldsize) #tamanio para resize
+################################# rotacion
 im=im.rotate(float(np.random.random(1)*360),expand=1).resize(size)#angulo random
-#im.show()#muestra la imagen rotanda
+#im.show()#muestra la imagen rotada
 im.save('imt1.jpg')#graba la imagen rotada como jpg
-'''
-tamano random
-imagen random
-'''
-########################
+
+########################nueva imagen
 mesh = Image.new("RGBA", np.array(oldsize)*4,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
 newsize=mesh.size
+a=18#cantidad de ptos totales
+r=np.random.random((a,2)) #matriz de numeros random(es un vextor de pares de coordenadas)
 for b in r:
     #print 'b[0]*mesh.size=',  b[0]*mesh.size[0]#chequeo que de lo que quiero
     mesh.paste(im, (int(b[0]*mesh.size[0]), int(b[1]*mesh.size[1])), im )#pone las imagenes en las coordenadas random
@@ -60,9 +73,7 @@ mesh.show()
 mesh.save('mesh.jpg')
 
 ########################
-
 r=r*mesh.size[1]
-#print 'r[:,0](deberia dar igual que los b[0])=', r[:,0]
 for c in r:
     fig1=plt.plot(int(c[0]),mesh.size[1]-int(c[1]),'.r')
 #plt.show()
@@ -73,13 +84,7 @@ Hasta aca es puntos random .
 ###############################################################################
 
 De aca para abajo es redes.
-'''
-
-'''
 Intento de hacer redes de bravais de imagenes:
-Red en 2*2
-# [[0,0], [0,1], [1,1], [1,0]]]
-#-----------------------------------------------
 '''
 
 def unit_vectors(distance, style='rectangular'):
@@ -90,7 +95,6 @@ def unit_vectors(distance, style='rectangular'):
         #codigo para estilo random
         style=styles[np.random.randint(5)]
         print 'random style= ', style
-    
     
     if style=='rectangular':
         at1 = [d/2, 0]#posicion del primer atomo
@@ -160,8 +164,6 @@ def new_atom(red, posicion, debug=False ):
     newatom=[]
     newatom= np.array(red)[]
 '''    
-
-
     
 R= atom_locations(unit_vectors(5.,'random'),6)#chequeo que funcione la red. 
 #print 'l:', l,  'm:', m #chaqueo que funcione ly m
@@ -177,8 +179,6 @@ for b in R:
 mesh2.save('mesh2.jpg')
 plt.show()
 mesh2.show()
-
-
 
 '''
 ideas:
