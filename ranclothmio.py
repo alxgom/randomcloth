@@ -67,11 +67,22 @@ im.save('imt1.jpg')#graba la imagen rotada como jpg
 ########################nueva imagen
 mesh = Image.new("RGBA", np.array(oldsize)*3,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
 newsize=mesh.size
-a=18#cantidad de ptos totales
-r=np.random.random((a,2)) #matriz de numeros random(es un vextor de pares de coordenadas)
-for b in r:
-    #print 'b[0]*mesh.size=',  b[0]*mesh.size[0]#chequeo que de lo que quiero
-    mesh.paste(im, (int(b[0]*mesh.size[0]), int(b[1]*mesh.size[1])), im )#pone las imagenes en las coordenadas random
+
+def todorandom(im, cantpuntos, stylerot=1):#cantidad de puntos
+    a=cantpuntos#cantidad de ptos totales
+    r=np.random.random((a,2))
+    if stylerot==1:
+        #matriz de numeros random(es un vextor de pares de coordenadas)
+        for b in r:
+            #print 'b[0]*mesh.size=',  b[0]*mesh.size[0]#chequeo que de lo que quiero
+            mesh.paste(im, (int(b[0]*mesh.size[0]), int(b[1]*mesh.size[1])), im )#pone las imagenes en las coordenadas random
+    if stylerot==2:
+        for b in r:
+            rotim=im.rotate(float(np.random.random(1)*360),expand=1).resize(size)
+            mesh.paste(rotim, (int(b[0]*mesh.size[0]), int(b[1]*mesh.size[1])), rotim )#pone las imagenes en las coordenadas random
+
+todorandom(im, 100,2)
+
 mesh.show()
 mesh.save('mesh.jpg')
 
@@ -174,7 +185,7 @@ R= atom_locations(unit_vectors(5.,'random'),6)#chequeo que funcione la red.
 mesh2 = Image.new("RGBA", np.array(im.size)*7,"white")#Crea Imagen en blanco de 4 veces el tamanio de la original para poner las otras imagenes
 #print 'l=', l
 R=np.array(R)#combierto a R en un array para poder operar como vector.
-R=R*max(im.size)/2
+R=R*max(im.size)
 for b in R:
     #print 'b:',  b
     fig2=plt.plot(b[0],mesh2.size[1]-b[1],'.b')
